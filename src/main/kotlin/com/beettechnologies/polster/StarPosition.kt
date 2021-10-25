@@ -1,10 +1,17 @@
 package com.beettechnologies.polster
 
-data class StarPosition(
-    val x: Int,
-    val y: Int,
-    val vX: Int,
-    val vY: Int
-) {
-    fun move()  = copy(x = x + vX, y = y + vY)
+// Allow mutability from properties
+data class StarPosition(var x: Int, var y: Int, val vX: Int, val vY: Int) {
+    fun move(forward: Boolean = true) {
+        when (forward) {
+            true -> {
+                x += vX
+                y += vY
+            }
+            else -> {
+                x -= vX
+                y -= vY
+            }
+        }
+    }
 }

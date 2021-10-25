@@ -6,28 +6,27 @@ val IntRange.span: Long get() = (this.last.toLong() - this.first.toLong()).absol
 
 data class SkyMessage(val positions: List<StarPosition>) {
 
-    private val positionsSet = positions.map { Pair(it.x, it.y) }.toSet()
-    private val area = xRange().span * yRange().span
+    private fun area(): Long = xRange().span * yRange().span
 
     fun computeMessage(): Pair<String, Int> {
         var timeToComputeMessage = -1
         var lastArea = Long.MAX_VALUE
 
-        var currentArea = area
+        var currentArea = area()
 
         while (currentArea < lastArea) {
-            move()
+            move(true)
             lastArea = currentArea
-            currentArea = area
+            currentArea = area()
             timeToComputeMessage++
         }
 
-        move()
+        move(false)
         return Pair(toString(), timeToComputeMessage)
     }
 
-    private fun move() {
-        positions.forEach { it.move() }
+    private fun move(forward: Boolean = true) {
+        positions.forEach { it.move(forward) }
     }
 
     private fun xRange(): IntRange {
@@ -39,6 +38,7 @@ data class SkyMessage(val positions: List<StarPosition>) {
     }
 
     override fun toString(): String {
+        val positionsSet = positions.map { Pair(it.x, it.y) }.toSet()
         return yRange().joinToString(separator = "\n") { y ->
             xRange().map { x ->
                 if (Pair(x, y) in positionsSet) '#' else '.'
