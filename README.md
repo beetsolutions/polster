@@ -1,0 +1,3 @@
+# Polster Exercise
+
+* Kotlin based
