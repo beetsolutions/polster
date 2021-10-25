@@ -1,10 +1,21 @@
 package com.beettechnologies.polster
 
+import java.io.File
 import kotlin.math.absoluteValue
 
 val IntRange.span: Long get() = (this.last.toLong() - this.first.toLong()).absoluteValue
 
-data class SkyMessage(val positions: List<StarPosition>) {
+data class SkyMessage(val path: String) {
+
+    private val positions = File(path).readLines().map { position ->
+        position
+            .split(",", "<", ">")
+            .map { value ->
+                value.trim()
+            }.run {
+                StarPosition(this[1].toInt(), this[2].toInt(), this[4].toInt(), this[5].toInt())
+            }
+    }
 
     private fun area(): Long = xRange().span * yRange().span
 
